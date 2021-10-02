@@ -1,15 +1,24 @@
 package resources
 
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+	_ "image/png"
+	"strings"
+)
+
 const (
 	WorkAssignmentOneTitle = "Pump Station 3 blockage"
-	WorkAssignmentOneBody  = `An instability has been reported in the reactor's cooling circuit.
+	WorkAssignmentOneBody  = `An instability has been reported in the reactor's cooling
+circuit.
 
-Projections indicate that unless the fault is remedied within 0.32 sols the reactor will overheat.
-The probability of human survival in the event of a catastrophic reactor failure is nil. Mission
-parameters currently require survival of all human crew.
+Projections indicate that unless the fault is remedied
+within 0.32 sols the reactor will overheat. The probability
+of human survival in the event of a catastrophic reactor
+failure is nil. Mission parameters currently require
+survival of all human crew.
 
-Diagnostics indicate fluid flow in Pump Station 3 has been inhibited. Report to Pump Station 3
-and correct the issue.`
+Diagnostics indicate fluid flow in Pump Station 3 has been
+inhibited. Report to Pump Station 3 and correct the issue.`
 
 	WorkAssignmentTwoTitle = "Pump Station 3 Rate Discrepancy"
 	WorkAssignmentTwoBody  = `Pump Station 3 is now operational but the coolant flow is erratic.
@@ -58,3 +67,40 @@ require that the base AI receives uninterrupted %%NOUN_POWER%%.`
 Mission parameters require that the base AI survive. Report to %%NOUN_POWER%% Control Beta and divert emergency
 %%NOUN_POWER%% to the Base AI. Backup power failure will occur in 0.372 sols.`
 )
+
+var lettersSheet *Sheet
+
+const (
+	lettersIndex = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?:()<>'_"
+)
+
+func init() {
+	var err error
+	lettersSheet, err = NewSheet("letters.png", 8, 12)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func RenderText(image *ebiten.Image, text string, x, y int) {
+	runes := []rune(strings.ToUpper(text))
+	width := 0
+	row := 0
+	ops := &ebiten.DrawImageOptions{}
+	ops.GeoM.Scale(2, 2)
+	ops.GeoM.Translate(float64(x), float64(y))
+	for i := range runes {
+		if runes[i] == '\n' {
+			width = 0
+			row++
+			ops.GeoM.Reset()
+			ops.GeoM.Scale(2, 2)
+			ops.GeoM.Translate(float64(x), float64(y+row*30))
+		} else {
+			index := strings.IndexRune(lettersIndex, runes[i])
+			image.DrawImage(lettersSheet.Sprite(index), ops)
+			ops.GeoM.Translate(18, 0)
+			width++
+		}
+	}
+}

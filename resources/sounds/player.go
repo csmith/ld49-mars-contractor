@@ -111,6 +111,7 @@ func PlayError() {
 	if err == nil {
 		player, err := audio.NewPlayer(context, src)
 		if err == nil {
+			player.SetVolume(0.4)
 			player.Play()
 		}
 	}

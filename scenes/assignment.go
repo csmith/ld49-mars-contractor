@@ -5,7 +5,6 @@ import (
 	"github.com/csmith/mars-contractor/resources"
 	"github.com/csmith/mars-contractor/resources/sounds"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"golang.org/x/image/colornames"
 )
@@ -30,10 +29,20 @@ type Assignment struct {
 func (a Assignment) Draw(screen *ebiten.Image) {
 	screen.Fill(colornames.Black)
 	screen.DrawImage(assignmentBackground, nil)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%02d", a.Day), 1170, 60)
-	ebitenutil.DebugPrintAt(screen, "Bob McBobFace", 370, 130)
-	ebitenutil.DebugPrintAt(screen, a.Name, 370, 180)
-	ebitenutil.DebugPrintAt(screen, a.Text, 100, 400)
+	resources.RenderText(
+		screen,
+		fmt.Sprintf(
+			"Assignment issued by: Base AI                        Sol: %d\n"+
+				"          Contractor: Bob Hines\n"+
+				"                Task: %s\n\n"+
+				"Additional information follows_\n\n%s",
+			a.Day,
+			a.Name,
+			a.Text,
+		),
+		100,
+		130,
+	)
 }
 
 func (a Assignment) Update() Scene {
@@ -43,7 +52,7 @@ func (a Assignment) Update() Scene {
 			if a.ShouldReject {
 				return &GameOver{
 					Days: a.Day,
-					RCA: "A SpaceY contractor deliberately repowered\nthe known-unstable base AI.\n\nIt immediately vented atmosphere\nin retaliation for being cut off.",
+					RCA:  "A SpaceY contractor deliberately repowered\nthe known-unstable base AI.\n\nIt immediately vented atmosphere\nin retaliation for being cut off.",
 				}
 			} else {
 				sounds.EnableAiBackground = false
@@ -68,7 +77,7 @@ func (a Assignment) Update() Scene {
 				sounds.EnableAiBackground = false
 				return &GameOver{
 					Days: a.Day,
-					RCA: rejectReasons[a.Day-1],
+					RCA:  rejectReasons[a.Day-1],
 				}
 			}
 		}

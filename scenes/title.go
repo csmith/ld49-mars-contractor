@@ -3,7 +3,6 @@ package scenes
 import (
 	"github.com/csmith/mars-contractor/resources"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"golang.org/x/image/colornames"
 )
@@ -19,16 +18,18 @@ func init() {
 }
 
 type Title struct {
-
 }
 
 func (t Title) Draw(screen *ebiten.Image) {
 	screen.Fill(colornames.Black)
 	screen.DrawImage(titleBackground, nil)
-	ebitenutil.DebugPrintAt(screen, "You are a general contractor at SpaceY's newest base on Mars.", 100, 350)
-	ebitenutil.DebugPrintAt(screen, "You are assigned tasks by the base's AI. While your job may", 100, 360)
-	ebitenutil.DebugPrintAt(screen, "seem menial, SpaceY assures you that your work is vital to", 100, 370)
-	ebitenutil.DebugPrintAt(screen, "the success of the mission.", 100, 380)
+	resources.RenderText(screen,
+		"You are a general contractor at SpaceY's\n"+
+			"newest base on Mars.\n\n"+
+			"You are assigned tasks by the base's AI.\n\n"+
+			"While your job may seem menial, SpaceY\n"+
+			"assures you that your work is vital to\n"+
+			"the success of the mission.", 60, 300)
 }
 
 func (t Title) Update() Scene {
