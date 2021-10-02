@@ -114,6 +114,7 @@ type Pipe interface {
 }
 
 type PipesGame struct {
+	Day           int
 	pipes         [4][6]Pipe
 	filled        [4][6]bool
 	complete      bool
@@ -211,11 +212,15 @@ func (p *PipesGame) Update() Scene {
 	if p.complete {
 		p.completeTicks++
 		if p.completeTicks > 120 {
-			return &Assignment{
-				Day:          2,
-				Name:         "",
-				Text:         "",
-				ShouldReject: false,
+			if p.Day == 1 {
+				return &Assignment{
+					Day:          2,
+					Name:         resources.WorkAssignmentTwoTitle,
+					Text:         resources.WorkAssignmentTwoBody,
+					ShouldReject: false,
+				}
+			} else {
+				// TODO: Next assignment
 			}
 		}
 	}

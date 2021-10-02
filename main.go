@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/csmith/mars-contractor/resources/sounds"
 	"github.com/csmith/mars-contractor/scenes"
 	"github.com/hajimehoshi/ebiten/v2"
 	"log"
@@ -32,8 +33,9 @@ func main() {
 	ebiten.SetWindowSize(windowWidth, windowHeight)
 	ebiten.SetWindowTitle("Mars contractor")
 	ebiten.SetWindowResizable(false)
+	sounds.PlayBackground()
 	if err := ebiten.RunGame(&Game{
-		scene: &scenes.Title{},
+		&scenes.Title{},
 	}); err != nil {
 		log.Fatal(err)
 	}

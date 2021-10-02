@@ -6,7 +6,7 @@ import (
 	"image"
 )
 
-//go:embed *.png
+//go:embed *.png *.wav
 var assets embed.FS
 
 func LoadImageAsset(path string) (*ebiten.Image, image.Image, error) {
@@ -23,4 +23,8 @@ func LoadImageAsset(path string) (*ebiten.Image, image.Image, error) {
 	}
 	img2 := ebiten.NewImageFromImage(img)
 	return img2, img, err
+}
+
+func LoadAssetBytes(path string) ([]byte, error) {
+	return assets.ReadFile(path)
 }

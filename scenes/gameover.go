@@ -21,12 +21,13 @@ func init() {
 
 type GameOver struct {
 	Days int
+	RCA  string
 }
 
 func (g GameOver) Draw(screen *ebiten.Image) {
 	screen.Fill(colornames.Black)
 	screen.DrawImage(gameOverBackground, nil)
-	ebitenutil.DebugPrintAt(screen, "Your actions have lead to the complete loss of the mars colony.", 10, 30)
+	ebitenutil.DebugPrintAt(screen, g.RCA, 132, 264)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%2d ", g.Days), 1032, 484)
 
 }
