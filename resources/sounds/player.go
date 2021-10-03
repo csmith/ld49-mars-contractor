@@ -55,7 +55,7 @@ func init() {
 	}
 }
 
-var backgroundBytes = make(chan []byte, 10)
+var backgroundBytes = make(chan []byte, 60)
 
 type backgroundReader struct {
 	next []byte

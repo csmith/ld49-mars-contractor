@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<script src="wasm_exec.js"></script>
+<style>
+    body { overflow: hidden; }
+    #loading { height: 100%; width: 100%; text-align: center; font-size: x-large; color: white; }
+</style>
+<script>
+  // Polyfill
+  if (!WebAssembly.instantiateStreaming) {
+    WebAssembly.instantiateStreaming = async (resp, importObject) => {
+      const source = await (await resp).arrayBuffer();
+      return await WebAssembly.instantiate(source, importObject);
+    };
+  }
+
+  const go = new Go();
+  WebAssembly.instantiateStreaming(fetch("mars-contractor.wasm"), go.importObject).then(result => {
+    document.getElementById('loading').style.display = 'none';
+    go.run(result.instance);
+  });
+</script>
+<div id="loading">
+    Loading (approx 16MB total)...
+</div>
