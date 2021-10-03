@@ -12,11 +12,12 @@ import (
 const sampleRate = 44100
 
 var (
-	chill1     []byte
-	chill2     []byte
-	ai1        []byte
-	errorBytes []byte
-	beepBytes  []byte
+	chill1      []byte
+	chill2      []byte
+	ai1         []byte
+	errorBytes  []byte
+	beepBytes   []byte
+	switchBytes []byte
 
 	context = audio.NewContext(sampleRate)
 )
@@ -44,6 +45,11 @@ func init() {
 	}
 
 	beepBytes, err = resources.LoadAssetBytes("beep.wav")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	switchBytes, err = resources.LoadAssetBytes("switch.wav")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,7 +117,6 @@ func PlayError() {
 	if err == nil {
 		player, err := audio.NewPlayer(context, src)
 		if err == nil {
-			player.SetVolume(0.4)
 			player.Play()
 		}
 	}
@@ -119,6 +124,17 @@ func PlayError() {
 
 func PlayBeep() {
 	src, err := wav.DecodeWithSampleRate(sampleRate, bytes.NewReader(beepBytes))
+	if err == nil {
+		player, err := audio.NewPlayer(context, src)
+		if err == nil {
+			player.SetVolume(0.4)
+			player.Play()
+		}
+	}
+}
+
+func PlaySwitch() {
+	src, err := wav.DecodeWithSampleRate(sampleRate, bytes.NewReader(switchBytes))
 	if err == nil {
 		player, err := audio.NewPlayer(context, src)
 		if err == nil {

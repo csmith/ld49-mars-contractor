@@ -156,13 +156,10 @@ func (p *PipesGame) Init() {
 			&StraightPipe{Horizontal: false},
 		},
 	}
+	p.calculateFlow()
 }
 
 func (p *PipesGame) Draw(screen *ebiten.Image) {
-	mouseX, mouseY := ebiten.CursorPosition()
-	selectedX := (mouseX - 400) / (pipeSize * pipeScale)
-	selectedY := (mouseY - 150) / (pipeSize * pipeScale)
-
 	screen.Fill(colornames.Black)
 	screen.DrawImage(pumpBackground, nil)
 
@@ -170,39 +167,23 @@ func (p *PipesGame) Draw(screen *ebiten.Image) {
 		for x := range p.pipes[y] {
 			pipe := p.pipes[y][x]
 			op := &ebiten.DrawImageOptions{}
-			if selectedX == x && selectedY == y && !p.complete {
-				op.ColorM.Scale(1, 0, 0, 1)
-			} else if p.filled[y][x] {
-				op.ColorM.Scale(0, 0, 1, 1)
+			index := pipe.Sprite()
+			if !p.filled[y][x] {
+				index += 10
 			}
 			op.GeoM.Scale(pipeScale, pipeScale)
-			op.GeoM.Translate(float64(400+x*(pipeSize*pipeScale)), float64(150+y*(pipeSize*pipeScale)))
-			screen.DrawImage(pipeSheet.Sprite(pipe.Sprite()), op)
+			op.GeoM.Translate(float64(396+x*(pipeSize*pipeScale)), float64(150+y*(pipeSize*pipeScale)))
+			screen.DrawImage(pipeSheet.Sprite(index), op)
 		}
-	}
-
-	op := &ebiten.DrawImageOptions{}
-	op.ColorM.Scale(0.3, 0.3, 0.3, 1)
-	op.GeoM.Scale(pipeScale, pipeScale)
-	op.GeoM.Translate(float64(400-(pipeSize*pipeScale)), float64(150+2*(pipeSize*pipeScale)))
-	screen.DrawImage(pipeSheet.Sprite(0), op)
-
-	for i := 0; i < 4; i++ {
-		op.GeoM.Reset()
-		op.GeoM.Scale(pipeScale, pipeScale)
-		op.GeoM.Translate(float64(400+6*(pipeSize*pipeScale)), float64(150+i*(pipeSize*pipeScale)))
-		screen.DrawImage(pipeSheet.Sprite(0), op)
 	}
 }
 
 func (p *PipesGame) Update() Scene {
-	_, dy := ebiten.Wheel()
-	if !p.complete && (dy != 0 || inpututil.IsKeyJustPressed(ebiten.KeyR)) {
+	if !p.complete && inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		mouseX, mouseY := ebiten.CursorPosition()
 		selectedX := (mouseX - 400) / (pipeSize * pipeScale)
 		selectedY := (mouseY - 150) / (pipeSize * pipeScale)
 		if selectedX >= 0 && selectedX < 6 && selectedY >= 0 && selectedY < 4 {
-			// TOOD: Allow backwards rotation
 			p.pipes[selectedY][selectedX].Rotate()
 			p.calculateFlow()
 			p.checkVictory()

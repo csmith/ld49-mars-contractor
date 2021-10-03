@@ -30,13 +30,13 @@ func (l *LockedDoor) Draw(screen *ebiten.Image) {
 
 	x, y := ebiten.CursorPosition()
 	horizontal := (x - 664) / 104
-	vertical := (y - 248) / 120
+	vertical := (y - 248) / 116
 	if (x-664)%104 <= 92 && (y-248)%116 <= 96 && horizontal >= 0 && vertical >= 0 && horizontal <= 4 && vertical <= 1 {
 		// Valid button
 		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(float64(horizontal*104+664), float64(vertical*120+248))
+		op.GeoM.Translate(float64(horizontal*104+664), float64(vertical*108+252))
 		op.ColorM.Scale(1, 0.3, 0.3, 1)
-		screen.DrawImage(doorBackground.SubImage(image.Rect(horizontal*104+664, vertical*120+248, horizontal*104+664+92, vertical*120+248+96)).(*ebiten.Image), op)
+		screen.DrawImage(doorBackground.SubImage(image.Rect(horizontal*104+664, vertical*108+252, horizontal*104+664+92, vertical*108+252+96)).(*ebiten.Image), op)
 	}
 }
 

@@ -29,10 +29,10 @@ type Assignment struct {
 func (a Assignment) Draw(screen *ebiten.Image) {
 	screen.Fill(colornames.Black)
 	screen.DrawImage(assignmentBackground, nil)
-	resources.RenderText(
+	resources.RenderTextLarge(
 		screen,
 		fmt.Sprintf(
-			"Assignment issued by: Base AI                        Sol: %d\n"+
+			"Assignment issued by: Base AI                      Sol: 30%d\n"+
 				"          Contractor: Bob Hines\n"+
 				"                Task: %s\n\n"+
 				"Additional information follows_\n\n%s",
@@ -47,55 +47,23 @@ func (a Assignment) Draw(screen *ebiten.Image) {
 
 func (a Assignment) Update() Scene {
 	sounds.EnableAiBackground = true
-	if x, y := ebiten.CursorPosition(); inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && y > 600 {
-		if x < 450 {
-			if a.ShouldReject {
-				return &GameOver{
-					Days: a.Day,
-					RCA:  "A SpaceY contractor deliberately repowered\nthe known-unstable base AI.\n\nIt immediately vented atmosphere\nin retaliation for being cut off.",
-				}
-			} else {
-				sounds.EnableAiBackground = false
-				switch a.Day {
-				case 1:
-					s := &PipesGame{Day: 1}
-					s.Init()
-					return s
-				case 2:
-					return &RateGame{}
-				case 3:
-					return &LockedDoor{}
-				case 4:
-					return &Power{}
-				}
-			}
-		} else {
-			if a.ShouldReject {
-				sounds.EnableAiBackground = false
-				return &Victory{}
-			} else {
-				sounds.EnableAiBackground = false
-				return &GameOver{
-					Days: a.Day,
-					RCA:  rejectReasons[a.Day-1],
-				}
-			}
-		}
-
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		sounds.EnableAiBackground = false
-		return &Assignment{
-			Day:  1,
-			Name: resources.WorkAssignmentOneTitle,
-			Text: resources.WorkAssignmentOneBody,
+		switch a.Day {
+		case 1:
+			s := &PipesGame{Day: 1}
+			s.Init()
+			return s
+		case 2:
+			return &RateGame{}
+		case 3:
+			return &LockedDoor{}
+		case 4:
+			return &Power{}
+		case 5:
+			return &BackupPower{}
 		}
 	}
 
 	return a
-}
-
-var rejectReasons = []string{
-	"Coolant flow to the reactor was compromised.\n\nThe general contractor assigned ignored the work order.\n\nThe reactor went super-critical; all hands were lost.",
-	"Coolant flow to the reactor was compromised.\n\nThe general contractor assigned ignored the work order.\n\nThe reactor went super-critical; all hands were lost.",
-	"Due to a lack of paperwork, the crew\nwere lead to believe the AI was unstable\n\nThey attempted to disable it but were\nnot in a position to do so.\n\nThe crew were eliminated in self-defence.",
-	"Excess power draw caused rolling blackouts.\n\nThe general contractor assigned ignored the work order.\n\nLife support, meteor defence and hydroponics all suffered.\n\nThe consequences were dire.",
 }

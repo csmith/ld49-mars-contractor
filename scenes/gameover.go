@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/csmith/mars-contractor/resources"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"golang.org/x/image/colornames"
 )
@@ -27,9 +26,7 @@ type GameOver struct {
 func (g *GameOver) Draw(screen *ebiten.Image) {
 	screen.Fill(colornames.Black)
 	screen.DrawImage(gameOverBackground, nil)
-	ebitenutil.DebugPrintAt(screen, g.RCA, 132, 264)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%2d ", g.Days), 1032, 484)
-
+	resources.RenderTextSmall(screen, fmt.Sprintf("Mission failure report, Sol 30%d_\n\n%s", g.Days, g.RCA), 90, 370)
 }
 
 func (g *GameOver) Update() Scene {

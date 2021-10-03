@@ -3,7 +3,6 @@ package scenes
 import (
 	"github.com/csmith/mars-contractor/resources"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"golang.org/x/image/colornames"
 	"image"
 	"math"
@@ -31,7 +30,7 @@ type RateGame struct {
 func (r *RateGame) Draw(screen *ebiten.Image) {
 	screen.Fill(colornames.Black)
 	screen.DrawImage(rateBackground, nil)
-	bar := screen.SubImage(image.Rect(800, 130, 850, 530)).(*ebiten.Image)
+	bar := screen.SubImage(image.Rect(796, 130, 852, 530)).(*ebiten.Image)
 	bar.Fill(colornames.Gray)
 
 	color := colornames.Blue
@@ -41,7 +40,7 @@ func (r *RateGame) Draw(screen *ebiten.Image) {
 		color = colornames.Yellow
 	}
 
-	bar.SubImage(image.Rect(800, 330+int(r.rate*100), 850, 530)).(*ebiten.Image).Fill(color)
+	bar.SubImage(image.Rect(796, 330+int(r.rate*100), 852, 530)).(*ebiten.Image).Fill(color)
 }
 
 func (r *RateGame) Update() Scene {
@@ -50,11 +49,11 @@ func (r *RateGame) Update() Scene {
 		r.rawRate = math.Sin(float64(r.ticks)/120) + math.Pow(math.Sin(float64(r.ticks)/60), 2) - math.Pow(math.Sin(5+float64(r.ticks)/60), 2)
 		r.rate += (r.rawRate - r.rate) / 25
 
-		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-			r.rate -= 0.34
+		if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+			r.rate -= 0.05
 		}
-		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
-			r.rate += 0.34
+		if ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
+			r.rate += 0.05
 		}
 
 		if r.rate < -1.2 || r.rate > 1.2 {
@@ -62,7 +61,7 @@ func (r *RateGame) Update() Scene {
 			r.end = r.damage > 60
 		}
 
-		if r.ticks > 60*45 {
+		if r.ticks > 60*36 {
 			r.end = true
 		}
 	} else {
@@ -71,7 +70,7 @@ func (r *RateGame) Update() Scene {
 			if r.rate < -1.2 || r.rate > 1.2 {
 				return &GameOver{
 					Days: 2,
-					RCA: "Contractor engaged in manual coolant rate\ncontrol failed to keep coolant within\nacceptable parameters.\n\nA reactor cascade occurred.\n\nAll hands were lost.",
+					RCA: "Contractor engaged in manual coolant rate control\nfailed to keep coolant within acceptable parameters.\n\nA reactor cascade occurred.\n\nAll hands were lost.",
 				}
 			} else {
 				return &Assignment{

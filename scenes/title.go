@@ -23,7 +23,7 @@ type Title struct {
 func (t Title) Draw(screen *ebiten.Image) {
 	screen.Fill(colornames.Black)
 	screen.DrawImage(titleBackground, nil)
-	resources.RenderText(screen,
+	resources.RenderTextLarge(screen,
 		"You are a general contractor at SpaceY's\n"+
 			"newest base on Mars.\n\n"+
 			"You are assigned tasks by the base's AI.\n\n"+
