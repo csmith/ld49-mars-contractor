@@ -33,7 +33,7 @@ func (p *BackupPower) Update() Scene {
 		} else {
 			return &GameOver{
 				Days: 5,
-				RCA:  "A SpaceY contractor deliberately repowered the unstable\nbase AI.\n\nIt immediately vented atmosphere in retaliation for being\ncut off.\n\nAll hands were lost.",
+				RCA:  "A SpaceY contractor deliberately repowered the\nunstable base AI.\n\nIt immediately vented atmosphere in retaliation for\nbeing cut off.\n\nAll hands were lost.",
 			}
 		}
 	}
